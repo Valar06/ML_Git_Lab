@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
 
 df = pd.read_csv("dataset.csv")
 
@@ -14,17 +15,14 @@ purchased_encoder = LabelEncoder()
 df["Purchased"] = purchased_encoder.fit_transform(df["Purchased"])
 
 X = df[["Country", "Age", "Salary"]]
-y = df["Purchased"]
+y = df["Salary"]
 
-model = LogisticRegression()
+model = LinearRegression()
 model.fit(X, y)
 
+predictions = model.predict(X)
+
+accuracy = r2_score(y, predictions)
+
 print("Model trained successfully")
-
-new_sample = [[country_encoder.transform(["France"])[0], 40, 60000]]
-prediction = model.predict(new_sample)
-
-if prediction[0] == 1:
-    print("Prediction: Yes")
-else:
-    print("Prediction: No")
+print("Accuracy (R2 Score):", accuracy)
